@@ -13,7 +13,7 @@ A custom battery management and motor protection project built around an STM32F1
 
 Watch the Battery Management System in action:
 
-[![Watch the Battery Management System in action](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](./project9-thumbnail.mp4)
+[![Watch the Battery Management System in action](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](./project-thumbnail.mp4)
 
 The video demonstrates real-time battery voltage, current, and power monitoring on the OLED display, along with fail-safe protection activation.
 
