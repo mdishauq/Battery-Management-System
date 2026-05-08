@@ -39,7 +39,7 @@
     <section class="hero">
       <div class="container hero-inner">
         <div class="hero-copy animate-up">
-          <h1>Custom Battery Management System</h1>
+          <h1>Custom <span>Battery Management</span> System</h1>
           <p class="lead">Real-time sensing, DMA-driven acquisition, and microsecond-level protection — designed with discrete analog front-ends and STM32 firmware.</p>
           <div class="hero-cta">
             <a class="btn primary" href="#architecture">Explore Architecture</a>
@@ -56,13 +56,15 @@
 
     <section id="about" class="panel light animate-up">
       <div class="container">
-        <h2>Executive Summary</h2>
-        <p>This project implements a custom BMS around the STM32F103 MCU with a discrete analog front-end for voltage and current sensing, an SSD1306 OLED UI, and a solid-state MOSFET disconnect. It emphasizes education and transparency instead of black-box sensors.</p>
+        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">Executive Summary</h2>
+        <p style="font-size:18px;color:var(--muted);line-height:1.8">This project implements a custom BMS around the STM32F103 MCU with a discrete analog front-end for voltage and current sensing, an SSD1306 OLED UI, and a solid-state MOSFET disconnect. It emphasizes education and transparency instead of black-box sensors.</p>
       </div>
     </section>
 
     <section id="architecture" class="panel white sea-left">
-      <div class="container grid-2">
+      <div class="container">
+        <h2 style="font-size:42px;margin-bottom:32px;color:var(--dark);font-weight:900">🏗️ System Architecture</h2>
+        <div class="grid-2">
         <div class="card animate-left">
           <h3>System Architecture</h3>
           <p>The architecture follows a closed-loop: precise analog <strong>sensing</strong> → real-time DMA <strong>acquisition</strong> → numerical <strong>processing</strong> → OLED <strong>display</strong> and safety <strong>protection</strong>. Key components are listed below.</p>
@@ -113,8 +115,8 @@
 
     <section id="hardware" class="panel light animate-up">
       <div class="container">
-        <h2>Hardware & Circuit Design</h2>
-        <p>This project intentionally uses discrete analog components so every signal path is visible and tunable. Below are the main circuit blocks and their roles.</p>
+        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">⚡ Hardware &amp; Circuit Design</h2>
+        <p style="font-size:18px;color:var(--muted);line-height:1.8">This project intentionally uses discrete analog components so every signal path is visible and tunable. Below are the main circuit blocks and their roles.</p>
 
         <h4><svg class="icon" width="18" height="18"><use href="#icon-code"/></svg> Voltage Sensing</h4>
         <p>A precision resistor divider scales the pack voltage down to the MCU's ADC input range. The firmware reconstructs the real battery voltage by applying the divider ratio to ADC readings. Example formula used in firmware:</p>
@@ -143,8 +145,8 @@ if (I > 0.6) { // amps
 
     <section id="firmware" class="panel white sea-right animate-up">
       <div class="container">
-        <h2>Firmware &amp; Software</h2>
-        <p>The firmware is written in C using the STM32 HAL. ADC is configured in continuous scan mode across two channels and DMA transfers conversion pairs into a small memory buffer. This minimizes CPU blocking and guarantees deterministic sampling behavior.</p>
+        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">💻 Firmware &amp; Software</h2>
+        <p style="font-size:18px;color:var(--muted);line-height:1.8">The firmware is written in C using the STM32 HAL. ADC is configured in continuous scan mode across two channels and DMA transfers conversion pairs into a small memory buffer. This minimizes CPU blocking and guarantees deterministic sampling behavior.</p>
 
         <h4>DMA-Driven ADC</h4>
         <p>ADC samples are streamed into `adc_buffer[2]` via DMA. The main loop reads the latest values without polling the ADC peripheral directly.</p>
@@ -168,8 +170,8 @@ Q_ah += I * (delta_s / 3600.0);
 
     <section id="media" class="panel light">
       <div class="container">
-        <h2>Media</h2>
-        <p>Featured demo of the running project (uses the video you placed in the `website/` folder).</p>
+        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">🎬 Live Demo</h2>
+        <p style="font-size:18px;color:var(--muted);line-height:1.8">Featured demo of the running project. Watch the real-time battery metrics and protection in action.</p>
         <div class="media-grid">
           <video controls class="media-card animate-up" poster="project%20display%20image.jpg">
             <source src="project-thumbnail.mp4" type="video/mp4">
@@ -181,8 +183,8 @@ Q_ah += I * (delta_s / 3600.0);
 
     <section id="gallery" class="panel white">
       <div class="container">
-        <h2>Gallery</h2>
-        <p>Project photos and closeups placed in the `website/` folder are shown below.</p>
+        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">📸 Gallery</h2>
+        <p style="font-size:18px;color:var(--muted);line-height:1.8">Project photos and closeups showing the OLED display output and backside assembly.</p>
         <div class="gallery" id="gallery">
           <img data-src="project%20display%20image.jpg" alt="OLED Display Output" class="gallery-item lazy">
           <img data-src="project%20back%20side%20image.jpg" alt="Backside soldering and wiring" class="gallery-item lazy">
@@ -192,8 +194,8 @@ Q_ah += I * (delta_s / 3600.0);
 
     <section id="download" class="panel light animate-up">
       <div class="container">
-        <h2>Downloads & Schematics</h2>
-        <p>Project KiCad schematic and PCB exports are available below (file in this folder).</p>
+        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">📥 Downloads & Schematics</h2>
+        <p style="font-size:18px;color:var(--muted);line-height:1.8">Access the complete KiCad schematic design and PCB exports for the BMS project.</p>
         <div class="downloads">
           <a class="doc" href="schematic%20design.pdf" target="_blank">Download KiCad schematic (schematic design.pdf)</a>
         </div>
