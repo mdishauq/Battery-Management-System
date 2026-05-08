@@ -3,221 +3,273 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Custom BMS — Project Showcase</title>
+  <title>Battery Management System — Production Grade</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-light.min.css">
+  <link rel="stylesheet" href="production.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container">
-      <a class="brand" href="#">BMS Project</a>
-      <!-- Inline SVG sprite for icons -->
-      <svg style="display:none;" aria-hidden="true">
-        <symbol id="icon-archive" viewBox="0 0 24 24"><path d="M3 3h18v4H3V3zm2 6h14v10H5V9zm4 2v6h6v-6H9z"/></symbol>
-        <symbol id="icon-code" viewBox="0 0 24 24"><path d="M8.7 17.3L3.4 12l5.3-5.3L7 5l-6 6 6 6 1.7-0.7zM15.3 6.7L20.6 12l-5.3 5.3L17 19l6-6-6-6-1.7 0.7z"/></symbol>
-        <symbol id="icon-download" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zm7-18v10l4-4 1.4 1.4L12 17 6.6 9.4 8 8l4 4V2h-0z"/></symbol>
-      </svg>
-      <nav class="nav">
-        <a href="#about">About</a>
+  <!-- Sticky Navigation -->
+  <header class="nav-header">
+    <nav class="nav-container">
+      <a class="logo" href="#top">BMS</a>
+      <div class="nav-links">
+        <a href="#hero">Home</a>
         <a href="#architecture">Architecture</a>
         <a href="#hardware">Hardware</a>
         <a href="#firmware">Firmware</a>
-        <a href="firmware.html">Firmware Walkthrough</a>
-        <a href="schematic.html">Schematic</a>
-        <a href="#media">Media</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#download">Downloads</a>
-      </nav>
-    </div>
+        <a href="#gallery">Media</a>
+        <a href="#specs">Specs</a>
+      </div>
+      <div class="nav-dot"></div>
+    </nav>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="container hero-inner">
-        <div class="hero-copy animate-up">
-          <h1>Custom <span>Battery Management</span> System</h1>
-          <p class="lead">Real-time sensing, DMA-driven acquisition, and microsecond-level protection — designed with discrete analog front-ends and STM32 firmware.</p>
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">Battery Management <span class="neon-text">System</span></h1>
+          <p class="hero-desc">Real-time monitoring, solid-state protection, and DMA-driven precision in a custom-built BMS.</p>
           <div class="hero-cta">
-            <a class="btn primary" href="#architecture">Explore Architecture</a>
-            <a class="btn ghost" href="#media">Watch Demo</a>
+            <a href="#architecture" class="btn btn-primary">Explore</a>
+            <a href="#gallery" class="btn btn-secondary">Demo</a>
           </div>
         </div>
-        <div class="hero-visual animate-scale">
-          <div class="device-mock">
-            <img src="project%20display%20image.jpg" alt="OLED display showing output" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" class="panel light animate-up">
-      <div class="container">
-        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">Executive Summary</h2>
-        <p style="font-size:18px;color:var(--muted);line-height:1.8">This project implements a custom BMS around the STM32F103 MCU with a discrete analog front-end for voltage and current sensing, an SSD1306 OLED UI, and a solid-state MOSFET disconnect. It emphasizes education and transparency instead of black-box sensors.</p>
-      </div>
-    </section>
-
-    <section id="architecture" class="panel white sea-left">
-      <div class="container">
-        <h2 style="font-size:42px;margin-bottom:32px;color:var(--dark);font-weight:900">🏗️ System Architecture</h2>
-        <div class="grid-2">
-        <div class="card animate-left">
-          <h3>System Architecture</h3>
-          <p>The architecture follows a closed-loop: precise analog <strong>sensing</strong> → real-time DMA <strong>acquisition</strong> → numerical <strong>processing</strong> → OLED <strong>display</strong> and safety <strong>protection</strong>. Key components are listed below.</p>
-          <ul>
-            <li><strong>Sensing:</strong> Voltage divider for pack voltage; low-value shunt resistor with op-amp for current.</li>
-            <li><strong>Acquisition:</strong> ADC configured in continuous scan of two channels with DMA into a 2-sample buffer.</li>
-            <li><strong>Processing:</strong> STM32F103 (Cortex-M3) computes instantaneous power and integrates energy/charge using delta-time.</li>
-            <li><strong>Display &amp; UI:</strong> SSD1306 128×64 via I2C presents formatted metrics and status.</li>
-            <li><strong>Protection:</strong> IRLZ44N low-side MOSFET controlled by GPIO with physical pull-down for fail-safe off-state.</li>
-          </ul>
-        </div>
-        <div class="card animate-right">
-          <h3>Key Features</h3>
-          <p>High-accuracy measurements and robust software protection make this design ideal for education and small-scale power applications.</p>
-          <ul>
-            <li>ADC resolution: 12-bit (4096 steps) with carefully chosen divider/gain scaling.</li>
-            <li>Shunt resistor: 0.15Ω with op-amp gain ≈50 for measurable ADC input.</li>
-            <li>Real-time computed metrics: V, I, P = V×I, E (Wh), Q (Ah), SoC%.</li>
-          </ul>
-          <div class="stats">
-            <div class="stat animate-pop"><strong>0.15Ω</strong><span>Shunt</span></div>
-            <div class="stat animate-pop"><strong>50×</strong><span>Op-amp</span></div>
-            <div class="stat animate-pop"><strong>4096</strong><span>ADC</span></div>
+        <div class="hero-visual">
+          <div class="hero-image-container">
+            <img src="project%20display%20image.jpg" alt="BMS Display" class="hero-image">
           </div>
         </div>
       </div>
-      <div class="container" style="margin-top:18px;">
-        <h4 style="display:flex;align-items:center;gap:10px"><svg class="icon" width="28" height="28"><use href="#icon-archive"/></svg>Architecture Diagram</h4>
-        <div class="diagram">
-          <svg viewBox="0 0 800 220" width="100%" height="220" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#00a9ce"/><stop offset="1" stop-color="#007ea7"/></linearGradient>
-            </defs>
-            <g stroke="url(#g1)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="24" y="36" width="140" height="120" rx="10" fill="#fff" stroke="rgba(0,0,0,0.06)"/>
-              <text x="94" y="110" text-anchor="middle" fill="#034" font-weight="700">Battery</text>
-              <rect x="220" y="36" width="180" height="120" rx="10" fill="#fff" stroke="rgba(0,0,0,0.06)"/>
-              <text x="310" y="90" text-anchor="middle" fill="#034" font-weight="700">AFE & ADC</text>
-              <rect x="460" y="36" width="140" height="120" rx="10" fill="#fff" stroke="rgba(0,0,0,0.06)"/>
-              <text x="530" y="110" text-anchor="middle" fill="#034" font-weight="700">STM32</text>
-              <path class="draw-line" d="M164 96 L220 96" />
-              <path class="draw-line" d="M400 96 L460 96" />
-            </g>
-          </svg>
+    </section>
+
+    <!-- Architecture Section with Bento Grid -->
+    <section id="architecture" class="section">
+      <div class="container">
+        <h2 class="section-title">System <span class="neon-text">Architecture</span></h2>
+        <div class="bento-grid">
+          <!-- Large card: Overview -->
+          <div class="bento-card bento-large glass-card reveal-up">
+            <div class="card-icon">📊</div>
+            <h3>Closed-Loop Architecture</h3>
+            <p>Sensing → Acquisition → Processing → Display & Protection. A complete cycle optimized for real-time performance and fail-safe operation.</p>
+            <div class="tech-badges">
+              <span class="badge">STM32F103</span>
+              <span class="badge">DMA-ADC</span>
+              <span class="badge">I2C OLED</span>
+            </div>
+          </div>
+
+          <!-- Sensing -->
+          <div class="bento-card glass-card reveal-left">
+            <div class="card-icon">⚡</div>
+            <h3>Sensing</h3>
+            <p>Voltage divider & shunt resistor with op-amp gain</p>
+            <code class="inline-code">0.15Ω | 50× gain</code>
+          </div>
+
+          <!-- ADC -->
+          <div class="bento-card glass-card reveal-right">
+            <div class="card-icon">📈</div>
+            <h3>ADC & DMA</h3>
+            <p>Continuous scan of 2 channels streamed via DMA</p>
+            <code class="inline-code">12-bit | 4096 steps</code>
+          </div>
+
+          <!-- Processing -->
+          <div class="bento-card glass-card reveal-left">
+            <div class="card-icon">💾</div>
+            <h3>Processing</h3>
+            <p>Real-time power, energy, and charge integration</p>
+            <code class="inline-code">P = V × I</code>
+          </div>
+
+          <!-- Display -->
+          <div class="bento-card glass-card reveal-right">
+            <div class="card-icon">📱</div>
+            <h3>Display & UI</h3>
+            <p>SSD1306 OLED 128×64 via I2C protocol</p>
+            <code class="inline-code">Real-time metrics</code>
+          </div>
+
+          <!-- Protection -->
+          <div class="bento-card glass-card reveal-up">
+            <div class="card-icon">🛡️</div>
+            <h3>Protection</h3>
+            <p>IRLZ44N MOSFET with fail-safe hardware pull-down</p>
+            <code class="inline-code">Microsecond disconnect</code>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="hardware" class="panel light animate-up">
+    <!-- Hardware Section -->
+    <section id="hardware" class="section section-alt">
       <div class="container">
-        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">⚡ Hardware &amp; Circuit Design</h2>
-        <p style="font-size:18px;color:var(--muted);line-height:1.8">This project intentionally uses discrete analog components so every signal path is visible and tunable. Below are the main circuit blocks and their roles.</p>
+        <h2 class="section-title">Hardware <span class="neon-text">Design</span></h2>
+        <div class="content-grid">
+          <div class="hardware-text reveal-left">
+            <h3>Discrete Analog Front-End</h3>
+            <p>Every component is visible and tunable. No black-box modules — pure signal conditioning engineered from first principles.</p>
+            
+            <div class="feature-box glass-card">
+              <h4 class="neon-accent">Voltage Sensing</h4>
+              <p>Precision resistor divider scales battery voltage to ADC range.</p>
+              <div class="formula">V<sub>bat</sub> = V<sub>adc</sub> × (R<sub>top</sub>+R<sub>bottom</sub>)/R<sub>bottom</sub></div>
+            </div>
 
-        <h4><svg class="icon" width="18" height="18"><use href="#icon-code"/></svg> Voltage Sensing</h4>
-        <p>A precision resistor divider scales the pack voltage down to the MCU's ADC input range. The firmware reconstructs the real battery voltage by applying the divider ratio to ADC readings. Example formula used in firmware:</p>
-        <div class="codecard"><pre><code>V_{bat} = V_{adc} \times \frac{R_{top}+R_{bottom}}{R_{bottom}}</code></pre></div>
+            <div class="feature-box glass-card">
+              <h4 class="neon-accent">Current Sensing</h4>
+              <p>Low-ohm shunt with op-amp amplification for accurate readings.</p>
+              <div class="formula">I = V<sub>adc</sub> / (Gain × R<sub>shunt</sub>)</div>
+            </div>
+          </div>
 
-        <h4><svg class="icon" width="18" height="18"><use href="#icon-code"/></svg> Current Sensing</h4>
-        <p>The load current is measured across a low-value shunt resistor (0.15Ω). Because the voltage drop is small, an op-amp with gain (~50×) amplifies the signal before the ADC. Firmware back-calculates:</p>
-        <div class="codecard"><pre><code>I = \frac{V_{adc}}{Gain \times R_{shunt}}</code></pre></div>
-
-        <h4><svg class="icon" width="18" height="18"><use href="#icon-download"/></svg> Solid-State Switching &amp; Safety</h4>
-        <p>An IRLZ44N logic-level MOSFET is used as a low-side switch. The gate is held to ground via a pull-down resistor so that on reset or power loss the MOSFET stays off. The MCU drives the gate actively for normal operation and immediately releases it when a fault is detected.</p>
-
-        <div class="codecard">
-          <pre><code>// ADC Channel mapping
-ADC_CHANNEL_0 = Voltage
-ADC_CHANNEL_1 = Current (amplified)
-
-// Example protection condition
-if (I > 0.6) { // amps
-  MOSFET_GATE = OFF; // immediate disconnect
-}
-          </code></pre>
+          <div class="hardware-image reveal-right">
+            <img src="project%20back%20side%20image.jpg" alt="PCB Assembly" class="glass-img">
+            <p class="caption">Backside assembly showing soldering and wiring</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="firmware" class="panel white sea-right animate-up">
+    <!-- Firmware Section -->
+    <section id="firmware" class="section">
       <div class="container">
-        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">💻 Firmware &amp; Software</h2>
-        <p style="font-size:18px;color:var(--muted);line-height:1.8">The firmware is written in C using the STM32 HAL. ADC is configured in continuous scan mode across two channels and DMA transfers conversion pairs into a small memory buffer. This minimizes CPU blocking and guarantees deterministic sampling behavior.</p>
+        <h2 class="section-title">Firmware <span class="neon-text">Implementation</span></h2>
+        <div class="firmware-grid">
+          <div class="fw-card glass-card reveal-left">
+            <h3>DMA-Driven ADC</h3>
+            <p>ADC continuously samples channels, DMA transfers data to buffer automatically.</p>
+            <pre><code class="language-c">HAL_ADC_Start_DMA(&hadc1, 
+  (uint32_t*)adc_buffer, 2);</code></pre>
+          </div>
 
-        <h4>DMA-Driven ADC</h4>
-        <p>ADC samples are streamed into `adc_buffer[2]` via DMA. The main loop reads the latest values without polling the ADC peripheral directly.</p>
+          <div class="fw-card glass-card reveal-right">
+            <h3>Data Integration</h3>
+            <p>Accumulate energy and charge using timestamped deltas.</p>
+            <pre><code class="language-c">E_wh += P × (Δt / 3600)
+Q_ah += I × (Δt / 3600)</code></pre>
+          </div>
 
-        <h4>Data Processing</h4>
-        <p>Instantaneous power and integrated energy/charge are computed using the elapsed time between iterations:</p>
-        <div class="codecard"><pre><code>// instantaneous power
-P = Vbat * I
+          <div class="fw-card glass-card reveal-left">
+            <h3>Protection Logic</h3>
+            <p>Evaluate thresholds multiple times per second, disconnect immediately on fault.</p>
+            <pre><code class="language-c">if (I > 0.6A) {
+  MOSFET_GATE = OFF;
+}</code></pre>
+          </div>
 
-// energy (Wh) accumulation over delta seconds
-E_wh += P * (delta_s / 3600.0);
-
-// charge (Ah)
-Q_ah += I * (delta_s / 3600.0);
-        </code></pre></div>
-
-        <h4>Safety & Watchdog</h4>
-        <p>The system evaluates safety thresholds several times per second. If an overcurrent or unexpected condition is detected, the firmware immediately clears the MOSFET gate and can log the event to non-volatile storage or display an error on the OLED. A watchdog timer is used to ensure fail-safe recovery; if the MCU locks, the pull-down resistor keeps the MOSFET off.</p>
+          <div class="fw-card glass-card reveal-right">
+            <h3>Fail-Safe Design</h3>
+            <p>Physical pull-down resistor guarantees safe power-off state on MCU reset.</p>
+            <pre><code class="language-c">// Default OFF state
+// Watchdog ensures recovery
+// No arcing, no wear</code></pre>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="media" class="panel light">
+    <!-- Media Gallery Section -->
+    <section id="gallery" class="section section-alt">
       <div class="container">
-        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">🎬 Live Demo</h2>
-        <p style="font-size:18px;color:var(--muted);line-height:1.8">Featured demo of the running project. Watch the real-time battery metrics and protection in action.</p>
-        <div class="media-grid">
-          <video controls class="media-card animate-up" poster="project%20display%20image.jpg">
+        <h2 class="section-title">Project <span class="neon-text">Showcase</span></h2>
+        
+        <!-- Video Player -->
+        <div class="gallery-item gallery-video reveal-up">
+          <video controls class="video-player" poster="project%20display%20image.jpg">
             <source src="project-thumbnail.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Your browser does not support video.
           </video>
+          <p class="caption">Live demo: Real-time battery metrics on OLED display</p>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="image-grid">
+          <div class="gallery-image reveal-left">
+            <img src="project%20display%20image.jpg" alt="Display Output" class="gallery-img">
+            <p class="caption">OLED Display Output</p>
+          </div>
+          <div class="gallery-image reveal-right">
+            <img src="project%20back%20side%20image.jpg" alt="PCB Assembly" class="gallery-img">
+            <p class="caption">Backside Assembly</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="gallery" class="panel white">
+    <!-- Specs Section -->
+    <section id="specs" class="section">
       <div class="container">
-        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">📸 Gallery</h2>
-        <p style="font-size:18px;color:var(--muted);line-height:1.8">Project photos and closeups showing the OLED display output and backside assembly.</p>
-        <div class="gallery" id="gallery">
-          <img data-src="project%20display%20image.jpg" alt="OLED Display Output" class="gallery-item lazy">
-          <img data-src="project%20back%20side%20image.jpg" alt="Backside soldering and wiring" class="gallery-item lazy">
+        <h2 class="section-title">Technical <span class="neon-text">Specifications</span></h2>
+        <div class="specs-grid">
+          <div class="spec-card glass-card reveal-up">
+            <div class="spec-icon">⚙️</div>
+            <h4>Microcontroller</h4>
+            <p>STM32F103<br>ARM Cortex-M3<br>72 MHz</p>
+          </div>
+          <div class="spec-card glass-card reveal-up" style="animation-delay: 0.1s">
+            <div class="spec-icon">🔌</div>
+            <h4>ADC</h4>
+            <p>12-bit Resolution<br>2-channel Scan<br>DMA Driven</p>
+          </div>
+          <div class="spec-card glass-card reveal-up" style="animation-delay: 0.2s">
+            <div class="spec-icon">📊</div>
+            <h4>Sensing</h4>
+            <p>Shunt: 0.15Ω<br>Op-Amp Gain: 50×<br>Precision: ±2%</p>
+          </div>
+          <div class="spec-card glass-card reveal-up" style="animation-delay: 0.3s">
+            <div class="spec-icon">💾</div>
+            <h4>Display</h4>
+            <p>SSD1306 OLED<br>128×64 pixels<br>I2C Interface</p>
+          </div>
+          <div class="spec-card glass-card reveal-up" style="animation-delay: 0.4s">
+            <div class="spec-icon">⚡</div>
+            <h4>Protection</h4>
+            <p>IRLZ44N MOSFET<br>Logic-Level Gate<br>Fail-Safe Pull-Down</p>
+          </div>
+          <div class="spec-card glass-card reveal-up" style="animation-delay: 0.5s">
+            <div class="spec-icon">🎯</div>
+            <h4>Performance</h4>
+            <p>Update Rate: 5 Hz<br>Response: Microseconds<br>Accuracy: High-Precision</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="download" class="panel light animate-up">
+    <!-- Schematic Download Section -->
+    <section id="schematic" class="section section-alt">
       <div class="container">
-        <h2 style="font-size:42px;margin-bottom:24px;color:var(--dark);font-weight:900">📥 Downloads & Schematics</h2>
-        <p style="font-size:18px;color:var(--muted);line-height:1.8">Access the complete KiCad schematic design and PCB exports for the BMS project.</p>
-        <div class="downloads">
-          <a class="doc" href="schematic%20design.pdf" target="_blank">Download KiCad schematic (schematic design.pdf)</a>
+        <h2 class="section-title">KiCad <span class="neon-text">Schematic</span></h2>
+        <div class="schematic-container reveal-up">
+          <embed src="schematic%20design.pdf" type="application/pdf" class="pdf-viewer">
+          <a href="schematic%20design.pdf" download class="btn btn-primary">Download PDF</a>
         </div>
       </div>
     </section>
 
-    <footer class="site-footer">
+    <!-- Footer -->
+    <footer class="footer">
       <div class="container">
-        <div>© <span id="year"></span> Custom BMS Project — Built with care</div>
-        <div class="small">Open-source documentation &amp; firmware included in repo</div>
+        <div class="footer-content">
+          <p>&copy; 2026 Custom Battery Management System — Production Grade Design</p>
+          <div class="footer-links">
+            <a href="firmware.html">Firmware Deep-Dive</a>
+            <a href="schematic.html">Schematic Viewer</a>
+          </div>
+        </div>
       </div>
     </footer>
-
-    <div id="lightbox" class="lightbox" aria-hidden="true">
-      <button id="lb-close" class="lb-close">×</button>
-      <img id="lb-img" src="" alt="" />
-    </div>
   </main>
 
-  <script src="script.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script src="production.js"></script>
 </body>
 </html>
