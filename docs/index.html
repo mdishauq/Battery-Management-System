@@ -29,6 +29,11 @@
   </header>
 
   <main>
+    <!-- GitHub Banner -->
+    <div style="background: linear-gradient(135deg, rgba(0, 153, 204, 0.1), rgba(0, 204, 255, 0.05)); padding: 1rem 2rem; text-align: center; border-bottom: 2px solid rgba(0, 153, 204, 0.2); margin-top: 80px;">
+      <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Check out the <strong><a href="https://github.com/mdishauq/Battery-Management-System" target="_blank" style="color: #0099cc; text-decoration: none; border-bottom: 2px solid #0099cc; transition: all 0.3s;">GitHub Repository</a></strong> for full source code and project files</p>
+    </div>
+
     <!-- Hero Section -->
     <section id="hero" class="hero">
       <div class="hero-content">
@@ -55,7 +60,7 @@
         <div class="bento-grid">
           <!-- Large card: Overview -->
           <div class="bento-card bento-large glass-card reveal-up">
-            <div class="card-icon">📊</div>
+            <div class="card-icon" style="font-size: 32px; color: #0099cc;">●</div>
             <h3>Closed-Loop Architecture</h3>
             <p><strong>Power Source:</strong> Main battery pack supplies the load. <strong>Sensing:</strong> Voltage divider & shunt resistor condition analog signals. <strong>Acquisition:</strong> ADC with DMA continuously streams 2 channels to RAM. <strong>Processing:</strong> STM32F103 computes instantaneous metrics (V, I, P) and integrates energy/charge over time. <strong>Display:</strong> SSD1306 OLED via I2C shows real-time dashboard. <strong>Protection:</strong> IRLZ44N MOSFET acts as solid-state contactor, breaking circuit in microseconds if safety threshold is breached. Complete cycle optimized for real-time performance and fail-safe operation.</p>
             <div class="tech-badges">
@@ -70,7 +75,7 @@
 
           <!-- Sensing -->
           <div class="bento-card glass-card reveal-left">
-            <div class="card-icon">⚡</div>
+            <div class="card-icon" style="font-size: 32px; color: #0099cc;">▲</div>
             <h3>Sensing</h3>
             <p><strong>Voltage:</strong> Precision resistor divider (1% tolerance) scales battery voltage. <strong>Current:</strong> 0.15Ω shunt resistor + MCP6002 op-amp (50× gain). Tiny shunt voltage is amplified to measurable ADC range.</p>
             <code class="inline-code">0.15Ω Shunt | MCP6002 | 50× Gain</code>
@@ -78,7 +83,7 @@
 
           <!-- ADC -->
           <div class="bento-card glass-card reveal-right">
-            <div class="card-icon">📈</div>
+            <div class="card-icon" style="font-size: 32px; color: #0099cc;">◆</div>
             <h3>ADC & DMA</h3>
             <p><strong>ADC:</strong> 12-bit with 4096 steps, dual-channel continuous scan mode. <strong>DMA:</strong> Autonomous data transfer to RAM buffer. No CPU blocking — real-time acquisition running silently in background.</p>
             <code class="inline-code">12-bit | 4096 steps | 2 Channels | DMA</code>
@@ -86,7 +91,7 @@
 
           <!-- Processing -->
           <div class="bento-card glass-card reveal-left">
-            <div class="card-icon">💾</div>
+            <div class="card-icon" style="font-size: 32px; color: #0099cc;">■</div>
             <h3>Processing</h3>
             <p><strong>Power (W):</strong> P = V × I. <strong>Energy (Wh):</strong> Integrate power over time. <strong>Charge (Ah):</strong> Integrate current over time. <strong>SoC (%):</strong> Derived from accumulated charge vs. capacity. All math executed in fixed 200ms intervals for predictable performance.</p>
             <code class="inline-code">P = V × I | E += P·Δt | Q += I·Δt</code>
@@ -94,7 +99,7 @@
 
           <!-- Display -->
           <div class="bento-card glass-card reveal-right">
-            <div class="card-icon">📱</div>
+            <div class="card-icon" style="font-size: 32px; color: #0099cc;">◉</div>
             <h3>Display & UI</h3>
             <p><strong>SSD1306:</strong> 128×64 pixel OLED module via I2C protocol. Real-time dashboard displays voltage, current, power, energy, charge, and state-of-charge in organized layout. Custom text formatting ensures clean display with no memory overflows.</p>
             <code class="inline-code">SSD1306 | I2C | 128×64 | Real-Time</code>
@@ -102,7 +107,7 @@
 
           <!-- Protection -->
           <div class="bento-card glass-card reveal-up">
-            <div class="card-icon">🛡️</div>
+            <div class="card-icon" style="font-size: 32px; color: #0099cc;">◆</div>
             <h3>Protection & Switching</h3>
             <p><strong>IRLZ44N:</strong> Logic-level N-Channel MOSFET on load low-side. <strong>Fail-Safe:</strong> Physical 10kΩ pull-down on gate guarantees OFF state during reset. <strong>Response:</strong> Overcurrent protection evaluates every 200ms; disconnects in microseconds on fault. No arcing, no wear, self-recoverable or programmable lockout.</p>
             <code class="inline-code">IRLZ44N | Fail-Safe Gate | Microsecond Response</code>
@@ -263,32 +268,32 @@ HAL_IWDG_Refresh(&hiwdg);
         <h2 class="section-title">Technical <span class="neon-text">Specifications</span></h2>
         <div class="specs-grid">
           <div class="spec-card glass-card reveal-up">
-            <div class="spec-icon">⚙️</div>
+            <div class="spec-icon" style="font-size: 32px; color: #0099cc;">●</div>
             <h4>Microcontroller</h4>
             <p><strong>STM32F103</strong><br>ARM Cortex-M3 Core<br>72 MHz Clock<br>Rich Peripherals (ADC, DMA, I2C, GPIO)</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.1s">
-            <div class="spec-icon">🔌</div>
+            <div class="spec-icon" style="font-size: 32px; color: #0099cc;">▲</div>
             <h4>ADC & Acquisition</h4>
             <p><strong>12-bit Resolution</strong><br>4096 Discrete Levels<br>Dual-Channel Scan<br>DMA-Driven (No CPU Blocking)</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.2s">
-            <div class="spec-icon">📊</div>
+            <div class="spec-icon" style="font-size: 32px; color: #0099cc;">◆</div>
             <h4>Sensing Hardware</h4>
             <p><strong>Shunt:</strong> 0.15Ω (±1% precision)<br><strong>Op-Amp:</strong> MCP6002 (50× gain)<br><strong>Voltage Divider:</strong> 1% metal-film resistors<br><strong>Accuracy:</strong> ±2%</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.3s">
-            <div class="spec-icon">💾</div>
+            <div class="spec-icon" style="font-size: 32px; color: #0099cc;">■</div>
             <h4>Display Interface</h4>
             <p><strong>SSD1306 OLED</strong><br>128×64 Pixels<br>I2C Communication<br>Real-Time Dashboard</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.4s">
-            <div class="spec-icon">⚡</div>
+            <div class="spec-icon" style="font-size: 32px; color: #0099cc;">◉</div>
             <h4>Power Control</h4>
             <p><strong>IRLZ44N MOSFET</strong><br>Logic-Level Gate (3.3V MCU Compatible)<br>Fail-Safe Pull-Down Resistor<br>Microsecond Switch Time</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.5s">
-            <div class="spec-icon">🎯</div>
+            <div class="spec-icon" style="font-size: 32px; color: #0099cc;">◆</div>
             <h4>System Performance</h4>
             <p><strong>Update Rate:</strong> 5 Hz (200ms)<br><strong>Protection Response:</strong> Microseconds<br><strong>Overcurrent Threshold:</strong> >0.6A<br><strong>Measurement Precision:</strong> High-Grade</p>
           </div>
