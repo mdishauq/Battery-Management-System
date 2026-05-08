@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Firmware Walkthrough — Custom BMS</title>
+  <link href="styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    .doc-hero{padding:36px 0 6px}
+    pre.code{overflow:auto}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html">BMS Project</a>
+      <nav class="nav"><a href="index.html">Home</a><a href="schematic.html">Schematic</a></nav>
+    </div>
+  </header>
+  <main>
+    <section class="panel white doc-hero">
+      <div class="container">
+        <h1>Firmware Walkthrough</h1>
+        <p>This page explains the firmware architecture, DMA-driven ADC, integration math, and the protection logic.</p>
+      </div>
+    </section>
+
+    <section class="panel light">
+      <div class="container">
+        <h2>ADC + DMA</h2>
+        <p>The ADC is configured in continuous scan of two channels and DMA writes each conversion into a 2-element buffer. The CPU reads these values and computes metrics without blocking.</p>
+        <pre class="code"><code class="language-c">// pseudo-init
+HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buffer, 2);
+// adc_buffer[0] -> voltage sample
+// adc_buffer[1] -> current sample (post-amp)
+        </code></pre>
+
+        <h2><svg class="icon" width="18" height="18"><use href="#icon-code"/></svg> Computations</h2>
+        <p>Instantaneous power and integrations are computed using delta time. Formulas:</p>
+        <p>Power: $P = V_{bat} \cdot I_{bat}$</p>
+        <p>Energy accumulation (Wh): $$E_{wh}\;+=\;P\;\times\;\frac{\Delta t}{3600}$$</p>
+        <div class="codecard"><pre><code class="language-c">// example loop
+float delta_s = compute_delta_seconds();
+float V = adc_to_voltage(adc_buffer[0]);
+float I = adc_to_current(adc_buffer[1]);
+float P = V * I;
+E_wh += P * (delta_s / 3600.0f);
+Q_ah += I * (delta_s / 3600.0f);
+        </code></pre></div>
+
+        <h2><svg class="icon" width="18" height="18"><use href="#icon-download"/></svg> Protection Logic</h2>
+        <p>Overcurrent detection is evaluated several times per second. If the threshold is exceeded, the MOSFET gate is cleared immediately.</p>
+        <pre class="code"><code class="language-c">if (I > OVERCURRENT_THRESHOLD){
+  HAL_GPIO_WritePin(MOSFET_GATE_GPIO_Port, MOSFET_GATE_Pin, GPIO_PIN_RESET);
+  // optionally log to flash or display error
+}
+        </code></pre>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div>© <span id="year"></span> Custom BMS Project</div>
+      </div>
+    </footer>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="script.js"></script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

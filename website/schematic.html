@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Schematic — Custom BMS</title>
+  <link href="styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <style>
+    .viewer{min-height:640px;border:1px solid rgba(0,0,0,0.06);border-radius:8px;overflow:hidden}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html">BMS Project</a>
+      <nav class="nav"><a href="index.html">Home</a><a href="firmware.html">Firmware</a></nav>
+    </div>
+  </header>
+  <main>
+    <section class="panel white">
+      <div class="container">
+        <h1><svg class="icon" width="20" height="20"><use href="#icon-archive"/></svg> KiCad Schematic</h1>
+        <p>The KiCad schematic and PCB exports are embedded below. Use the download link to fetch the original PDF.</p>
+        <div class="viewer">
+          <embed src="schematic%20design.pdf" type="application/pdf" width="100%" height="720px" />
+        </div>
+        <p style="margin-top:12px"><a class="doc" href="schematic%20design.pdf" download>Download schematic design.pdf</a></p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="container"><div>© <span id="year"></span> Custom BMS Project</div></div>
+    </footer>
+  </main>
+  <script src="script.js"></script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

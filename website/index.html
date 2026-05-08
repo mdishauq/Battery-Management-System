@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Custom BMS — Project Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="#">BMS Project</a>
+      <!-- Inline SVG sprite for icons -->
+      <svg style="display:none;" aria-hidden="true">
+        <symbol id="icon-archive" viewBox="0 0 24 24"><path d="M3 3h18v4H3V3zm2 6h14v10H5V9zm4 2v6h6v-6H9z"/></symbol>
+        <symbol id="icon-code" viewBox="0 0 24 24"><path d="M8.7 17.3L3.4 12l5.3-5.3L7 5l-6 6 6 6 1.7-0.7zM15.3 6.7L20.6 12l-5.3 5.3L17 19l6-6-6-6-1.7 0.7z"/></symbol>
+        <symbol id="icon-download" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zm7-18v10l4-4 1.4 1.4L12 17 6.6 9.4 8 8l4 4V2h-0z"/></symbol>
+      </svg>
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#firmware">Firmware</a>
+        <a href="firmware.html">Firmware Walkthrough</a>
+        <a href="schematic.html">Schematic</a>
+        <a href="#media">Media</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#download">Downloads</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy animate-up">
+          <h1>Custom Battery Management System</h1>
+          <p class="lead">Real-time sensing, DMA-driven acquisition, and microsecond-level protection — designed with discrete analog front-ends and STM32 firmware.</p>
+          <div class="hero-cta">
+            <a class="btn primary" href="#architecture">Explore Architecture</a>
+            <a class="btn ghost" href="#media">Watch Demo</a>
+          </div>
+        </div>
+        <div class="hero-visual animate-scale">
+          <div class="device-mock">
+            <img src="project%20display%20image.jpg" alt="OLED display showing output" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="panel light animate-up">
+      <div class="container">
+        <h2>Executive Summary</h2>
+        <p>This project implements a custom BMS around the STM32F103 MCU with a discrete analog front-end for voltage and current sensing, an SSD1306 OLED UI, and a solid-state MOSFET disconnect. It emphasizes education and transparency instead of black-box sensors.</p>
+      </div>
+    </section>
+
+    <section id="architecture" class="panel white sea-left">
+      <div class="container grid-2">
+        <div class="card animate-left">
+          <h3>System Architecture</h3>
+          <p>The architecture follows a closed-loop: precise analog <strong>sensing</strong> → real-time DMA <strong>acquisition</strong> → numerical <strong>processing</strong> → OLED <strong>display</strong> and safety <strong>protection</strong>. Key components are listed below.</p>
+          <ul>
+            <li><strong>Sensing:</strong> Voltage divider for pack voltage; low-value shunt resistor with op-amp for current.</li>
+            <li><strong>Acquisition:</strong> ADC configured in continuous scan of two channels with DMA into a 2-sample buffer.</li>
+            <li><strong>Processing:</strong> STM32F103 (Cortex-M3) computes instantaneous power and integrates energy/charge using delta-time.</li>
+            <li><strong>Display &amp; UI:</strong> SSD1306 128×64 via I2C presents formatted metrics and status.</li>
+            <li><strong>Protection:</strong> IRLZ44N low-side MOSFET controlled by GPIO with physical pull-down for fail-safe off-state.</li>
+          </ul>
+        </div>
+        <div class="card animate-right">
+          <h3>Key Features</h3>
+          <p>High-accuracy measurements and robust software protection make this design ideal for education and small-scale power applications.</p>
+          <ul>
+            <li>ADC resolution: 12-bit (4096 steps) with carefully chosen divider/gain scaling.</li>
+            <li>Shunt resistor: 0.15Ω with op-amp gain ≈50 for measurable ADC input.</li>
+            <li>Real-time computed metrics: V, I, P = V×I, E (Wh), Q (Ah), SoC%.</li>
+          </ul>
+          <div class="stats">
+            <div class="stat animate-pop"><strong>0.15Ω</strong><span>Shunt</span></div>
+            <div class="stat animate-pop"><strong>50×</strong><span>Op-amp</span></div>
+            <div class="stat animate-pop"><strong>4096</strong><span>ADC</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="container" style="margin-top:18px;">
+        <h4 style="display:flex;align-items:center;gap:10px"><svg class="icon" width="28" height="28"><use href="#icon-archive"/></svg>Architecture Diagram</h4>
+        <div class="diagram">
+          <svg viewBox="0 0 800 220" width="100%" height="220" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#00a9ce"/><stop offset="1" stop-color="#007ea7"/></linearGradient>
+            </defs>
+            <g stroke="url(#g1)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="24" y="36" width="140" height="120" rx="10" fill="#fff" stroke="rgba(0,0,0,0.06)"/>
+              <text x="94" y="110" text-anchor="middle" fill="#034" font-weight="700">Battery</text>
+              <rect x="220" y="36" width="180" height="120" rx="10" fill="#fff" stroke="rgba(0,0,0,0.06)"/>
+              <text x="310" y="90" text-anchor="middle" fill="#034" font-weight="700">AFE & ADC</text>
+              <rect x="460" y="36" width="140" height="120" rx="10" fill="#fff" stroke="rgba(0,0,0,0.06)"/>
+              <text x="530" y="110" text-anchor="middle" fill="#034" font-weight="700">STM32</text>
+              <path class="draw-line" d="M164 96 L220 96" />
+              <path class="draw-line" d="M400 96 L460 96" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="hardware" class="panel light animate-up">
+      <div class="container">
+        <h2>Hardware & Circuit Design</h2>
+        <p>This project intentionally uses discrete analog components so every signal path is visible and tunable. Below are the main circuit blocks and their roles.</p>
+
+        <h4><svg class="icon" width="18" height="18"><use href="#icon-code"/></svg> Voltage Sensing</h4>
+        <p>A precision resistor divider scales the pack voltage down to the MCU's ADC input range. The firmware reconstructs the real battery voltage by applying the divider ratio to ADC readings. Example formula used in firmware:</p>
+        <div class="codecard"><pre><code>V_{bat} = V_{adc} \times \frac{R_{top}+R_{bottom}}{R_{bottom}}</code></pre></div>
+
+        <h4><svg class="icon" width="18" height="18"><use href="#icon-code"/></svg> Current Sensing</h4>
+        <p>The load current is measured across a low-value shunt resistor (0.15Ω). Because the voltage drop is small, an op-amp with gain (~50×) amplifies the signal before the ADC. Firmware back-calculates:</p>
+        <div class="codecard"><pre><code>I = \frac{V_{adc}}{Gain \times R_{shunt}}</code></pre></div>
+
+        <h4><svg class="icon" width="18" height="18"><use href="#icon-download"/></svg> Solid-State Switching &amp; Safety</h4>
+        <p>An IRLZ44N logic-level MOSFET is used as a low-side switch. The gate is held to ground via a pull-down resistor so that on reset or power loss the MOSFET stays off. The MCU drives the gate actively for normal operation and immediately releases it when a fault is detected.</p>
+
+        <div class="codecard">
+          <pre><code>// ADC Channel mapping
+ADC_CHANNEL_0 = Voltage
+ADC_CHANNEL_1 = Current (amplified)
+
+// Example protection condition
+if (I > 0.6) { // amps
+  MOSFET_GATE = OFF; // immediate disconnect
+}
+          </code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="firmware" class="panel white sea-right animate-up">
+      <div class="container">
+        <h2>Firmware &amp; Software</h2>
+        <p>The firmware is written in C using the STM32 HAL. ADC is configured in continuous scan mode across two channels and DMA transfers conversion pairs into a small memory buffer. This minimizes CPU blocking and guarantees deterministic sampling behavior.</p>
+
+        <h4>DMA-Driven ADC</h4>
+        <p>ADC samples are streamed into `adc_buffer[2]` via DMA. The main loop reads the latest values without polling the ADC peripheral directly.</p>
+
+        <h4>Data Processing</h4>
+        <p>Instantaneous power and integrated energy/charge are computed using the elapsed time between iterations:</p>
+        <div class="codecard"><pre><code>// instantaneous power
+P = Vbat * I
+
+// energy (Wh) accumulation over delta seconds
+E_wh += P * (delta_s / 3600.0);
+
+// charge (Ah)
+Q_ah += I * (delta_s / 3600.0);
+        </code></pre></div>
+
+        <h4>Safety & Watchdog</h4>
+        <p>The system evaluates safety thresholds several times per second. If an overcurrent or unexpected condition is detected, the firmware immediately clears the MOSFET gate and can log the event to non-volatile storage or display an error on the OLED. A watchdog timer is used to ensure fail-safe recovery; if the MCU locks, the pull-down resistor keeps the MOSFET off.</p>
+      </div>
+    </section>
+
+    <section id="media" class="panel light">
+      <div class="container">
+        <h2>Media</h2>
+        <p>Featured demo of the running project (uses the video you placed in the `website/` folder).</p>
+        <div class="media-grid">
+          <video controls class="media-card animate-up" poster="project%20display%20image.jpg">
+            <source src="project-thumbnail.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="panel white">
+      <div class="container">
+        <h2>Gallery</h2>
+        <p>Project photos and closeups placed in the `website/` folder are shown below.</p>
+        <div class="gallery" id="gallery">
+          <img data-src="project%20display%20image.jpg" alt="OLED Display Output" class="gallery-item lazy">
+          <img data-src="project%20back%20side%20image.jpg" alt="Backside soldering and wiring" class="gallery-item lazy">
+        </div>
+      </div>
+    </section>
+
+    <section id="download" class="panel light animate-up">
+      <div class="container">
+        <h2>Downloads & Schematics</h2>
+        <p>Project KiCad schematic and PCB exports are available below (file in this folder).</p>
+        <div class="downloads">
+          <a class="doc" href="schematic%20design.pdf" target="_blank">Download KiCad schematic (schematic design.pdf)</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div>© <span id="year"></span> Custom BMS Project — Built with care</div>
+        <div class="small">Open-source documentation &amp; firmware included in repo</div>
+      </div>
+    </footer>
+
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+      <button id="lb-close" class="lb-close">×</button>
+      <img id="lb-img" src="" alt="" />
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+</body>
+</html>

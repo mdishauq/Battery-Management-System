@@ -1,0 +1,81 @@
+:root{
+  --sea: #007ea7;
+  --sea-2: #00a9ce;
+  --muted:#6b7b8c;
+  --bg:#ffffff;
+  --glass: rgba(255,255,255,0.75);
+  --accent: linear-gradient(135deg,var(--sea),var(--sea-2));
+  --radius:14px;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:#0b2233}
+.container{max-width:1100px;margin:0 auto;padding:28px}
+.site-header{position:sticky;top:0;backdrop-filter:blur(6px);background:rgba(255,255,255,0.7);border-bottom:1px solid #e9f2f6;z-index:40}
+.site-header .container{display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:800;color:var(--sea);text-decoration:none;font-size:18px}
+.nav a{margin-left:18px;color:#08323a;text-decoration:none;font-weight:600}
+
+.hero{padding:80px 0;background:linear-gradient(180deg, #f8feff 0%, #ffffff 60%)}
+.hero-inner{display:flex;gap:32px;align-items:center}
+.hero-copy{flex:1}
+.hero-copy h1{font-size:42px;margin:0 0 12px;color:#033744}
+.lead{font-size:18px;color:var(--muted);margin-bottom:18px}
+.btn{display:inline-block;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.btn.primary{background:var(--accent);color:white;box-shadow:0 8px 24px rgba(0,126,167,0.12)}
+.btn.ghost{background:transparent;border:2px solid rgba(1,30,40,0.06);color:var(--sea)}
+.hero-visual{width:320px}
+.device-mock{background:linear-gradient(180deg, #ffffff, #f4fbff);border-radius:16px;padding:14px;border:1px solid rgba(0,126,167,0.06);box-shadow:0 18px 50px rgba(2,64,76,0.06)}
+.device-mock img{width:100%;display:block}
+
+/* SVG icon styling */
+.icon{fill:var(--sea);width:20px;height:20px;vertical-align:middle}
+
+/* Animated diagram lines */
+.diagram svg{display:block}
+.diagram .draw-line{stroke-dasharray:300;stroke-dashoffset:300;animation:draw 1.2s ease forwards 0.4s}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.panel{padding:60px 0}
+.panel.white{background:linear-gradient(90deg, #ffffff 0%, #f8ffff 100%)}
+.panel.light{background:#fbfeff}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.card{background:var(--glass);padding:22px;border-radius:12px;border:1px solid rgba(2,64,76,0.04)}
+.card h3{margin-top:0}
+.stats{display:flex;gap:12px;margin-top:16px}
+.stat{background:linear-gradient(180deg,#ffffff,#f0fbff);padding:10px;border-radius:10px;text-align:center;min-width:96px}
+.stat strong{display:block;font-size:18px;color:var(--sea)}
+.codecard{background:#021f28;color:#bfeaf8;padding:14px;border-radius:10px;margin-top:16px}
+
+.media-grid{display:flex;gap:20px;flex-wrap:wrap}
+.media-card{width:48%;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,0.06)}
+
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gallery-item{width:100%;height:180px;object-fit:cover;border-radius:10px;background:#eaf6fa}
+
+.downloads .doc{display:inline-block;padding:12px 14px;border-radius:8px;background:var(--accent);color:white;text-decoration:none}
+
+.site-footer{padding:24px 0;background:linear-gradient(180deg,#f7fcff,#ffffff);border-top:1px solid #e9f2f6}
+.site-footer .container{display:flex;justify-content:space-between;align-items:center}
+.small{color:var(--muted);font-size:13px}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,18,22,0.65);z-index:80}
+.lightbox[aria-hidden="false"]{display:flex}
+.lightbox img{max-width:90%;max-height:86%;border-radius:8px}
+.lb-close{position:absolute;right:28px;top:24px;background:transparent;border:0;color:#fff;font-size:34px}
+
+/* Animations */
+.animate-up{opacity:0;transform:translateY(18px);transition:all .7s cubic-bezier(.2,.9,.2,1)}
+.animate-left{opacity:0;transform:translateX(-18px);transition:all .7s cubic-bezier(.2,.9,.2,1)}
+.animate-right{opacity:0;transform:translateX(18px);transition:all .7s cubic-bezier(.2,.9,.2,1)}
+.animate-scale{opacity:0;transform:scale(.98);transition:all .7s cubic-bezier(.2,.9,.2,1)}
+.animate-pop{opacity:0;transform:scale(.96);transition:all .6s cubic-bezier(.2,.9,.2,1)}
+.in-view{opacity:1;transform:none}
+
+@media (max-width:900px){
+  .grid-2{grid-template-columns:1fr}
+  .media-card{width:100%}
+  .gallery{grid-template-columns:repeat(2,1fr)}
+  .hero-inner{flex-direction:column}
+}
