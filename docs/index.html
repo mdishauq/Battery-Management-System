@@ -57,11 +57,14 @@
           <div class="bento-card bento-large glass-card reveal-up">
             <div class="card-icon">📊</div>
             <h3>Closed-Loop Architecture</h3>
-            <p>Sensing → Acquisition → Processing → Display & Protection. A complete cycle optimized for real-time performance and fail-safe operation.</p>
+            <p><strong>Power Source:</strong> Main battery pack supplies the load. <strong>Sensing:</strong> Voltage divider & shunt resistor condition analog signals. <strong>Acquisition:</strong> ADC with DMA continuously streams 2 channels to RAM. <strong>Processing:</strong> STM32F103 computes instantaneous metrics (V, I, P) and integrates energy/charge over time. <strong>Display:</strong> SSD1306 OLED via I2C shows real-time dashboard. <strong>Protection:</strong> IRLZ44N MOSFET acts as solid-state contactor, breaking circuit in microseconds if safety threshold is breached. Complete cycle optimized for real-time performance and fail-safe operation.</p>
             <div class="tech-badges">
               <span class="badge">STM32F103</span>
               <span class="badge">DMA-ADC</span>
+              <span class="badge">MCP6002 Op-Amp</span>
               <span class="badge">I2C OLED</span>
+              <span class="badge">IRLZ44N MOSFET</span>
+              <span class="badge">0.15Ω Shunt</span>
             </div>
           </div>
 
@@ -69,40 +72,40 @@
           <div class="bento-card glass-card reveal-left">
             <div class="card-icon">⚡</div>
             <h3>Sensing</h3>
-            <p>Voltage divider & shunt resistor with op-amp gain</p>
-            <code class="inline-code">0.15Ω | 50× gain</code>
+            <p><strong>Voltage:</strong> Precision resistor divider (1% tolerance) scales battery voltage. <strong>Current:</strong> 0.15Ω shunt resistor + MCP6002 op-amp (50× gain). Tiny shunt voltage is amplified to measurable ADC range.</p>
+            <code class="inline-code">0.15Ω Shunt | MCP6002 | 50× Gain</code>
           </div>
 
           <!-- ADC -->
           <div class="bento-card glass-card reveal-right">
             <div class="card-icon">📈</div>
             <h3>ADC & DMA</h3>
-            <p>Continuous scan of 2 channels streamed via DMA</p>
-            <code class="inline-code">12-bit | 4096 steps</code>
+            <p><strong>ADC:</strong> 12-bit with 4096 steps, dual-channel continuous scan mode. <strong>DMA:</strong> Autonomous data transfer to RAM buffer. No CPU blocking — real-time acquisition running silently in background.</p>
+            <code class="inline-code">12-bit | 4096 steps | 2 Channels | DMA</code>
           </div>
 
           <!-- Processing -->
           <div class="bento-card glass-card reveal-left">
             <div class="card-icon">💾</div>
             <h3>Processing</h3>
-            <p>Real-time power, energy, and charge integration</p>
-            <code class="inline-code">P = V × I</code>
+            <p><strong>Power (W):</strong> P = V × I. <strong>Energy (Wh):</strong> Integrate power over time. <strong>Charge (Ah):</strong> Integrate current over time. <strong>SoC (%):</strong> Derived from accumulated charge vs. capacity. All math executed in fixed 200ms intervals for predictable performance.</p>
+            <code class="inline-code">P = V × I | E += P·Δt | Q += I·Δt</code>
           </div>
 
           <!-- Display -->
           <div class="bento-card glass-card reveal-right">
             <div class="card-icon">📱</div>
             <h3>Display & UI</h3>
-            <p>SSD1306 OLED 128×64 via I2C protocol</p>
-            <code class="inline-code">Real-time metrics</code>
+            <p><strong>SSD1306:</strong> 128×64 pixel OLED module via I2C protocol. Real-time dashboard displays voltage, current, power, energy, charge, and state-of-charge in organized layout. Custom text formatting ensures clean display with no memory overflows.</p>
+            <code class="inline-code">SSD1306 | I2C | 128×64 | Real-Time</code>
           </div>
 
           <!-- Protection -->
           <div class="bento-card glass-card reveal-up">
             <div class="card-icon">🛡️</div>
-            <h3>Protection</h3>
-            <p>IRLZ44N MOSFET with fail-safe hardware pull-down</p>
-            <code class="inline-code">Microsecond disconnect</code>
+            <h3>Protection & Switching</h3>
+            <p><strong>IRLZ44N:</strong> Logic-level N-Channel MOSFET on load low-side. <strong>Fail-Safe:</strong> Physical 10kΩ pull-down on gate guarantees OFF state during reset. <strong>Response:</strong> Overcurrent protection evaluates every 200ms; disconnects in microseconds on fault. No arcing, no wear, self-recoverable or programmable lockout.</p>
+            <code class="inline-code">IRLZ44N | Fail-Safe Gate | Microsecond Response</code>
           </div>
         </div>
       </div>
@@ -118,15 +121,33 @@
             <p>Every component is visible and tunable. No black-box modules — pure signal conditioning engineered from first principles.</p>
             
             <div class="feature-box glass-card">
-              <h4 class="neon-accent">Voltage Sensing</h4>
-              <p>Precision resistor divider scales battery voltage to ADC range.</p>
+              <h4 class="neon-accent">Voltage Sensing (Resistor Divider)</h4>
+              <p><strong>Why:</strong> Car batteries and large battery packs (12V+) far exceed the STM32 ADC maximum of 3.3V. A passive voltage divider safely scales down the high voltage to the microcontroller's safe range.</p>
+              <p><strong>How:</strong> Two precision resistors form a divider network. The battery voltage input is dropped across these resistors before entering <code class="inline-code">ADC_CHANNEL_0</code>. The firmware then multiplies the scaled ADC reading by the divider ratio to reconstruct true battery voltage.</p>
               <div class="formula">V<sub>bat</sub> = V<sub>adc</sub> × (R<sub>top</sub>+R<sub>bottom</sub>)/R<sub>bottom</sub></div>
+              <p><strong>Implementation:</strong> High-tolerance resistors (1% metal film) ensure measurement accuracy. The divider ratio is pre-calculated and stored as a firmware constant for fast computation.</p>
             </div>
 
             <div class="feature-box glass-card">
-              <h4 class="neon-accent">Current Sensing</h4>
-              <p>Low-ohm shunt with op-amp amplification for accurate readings.</p>
-              <div class="formula">I = V<sub>adc</sub> / (Gain × R<sub>shunt</sub>)</div>
+              <h4 class="neon-accent">Current Sensing (Shunt + Op-Amp)</h4>
+              <p><strong>Why:</strong> Direct current measurement is impossible for an MCU. Instead, we measure the tiny voltage drop across a known resistance (Ohm's Law: V = I × R).</p>
+              <p><strong>Components:</strong></p>
+              <ul style="color: var(--text-secondary); margin: 0.75rem 0; padding-left: 1.5rem;">
+                <li><strong>Shunt Resistor (0.15Ω):</strong> Low-value, high-precision resistor in series with the load. At 1A current, it drops only 0.15V, minimizing power loss while remaining measurable.</li>
+                <li><strong>Op-Amp (MCP6002):</strong> Ultra-low-noise amplifier with 50× gain. The tiny 0.15V signal is amplified to a level the 12-bit ADC can resolve accurately (~7.5V at 1A).</li>
+              </ul>
+              <p><strong>Circuit Logic:</strong> Load current flows through shunt → voltage drop occurs → op-amp amplifies signal with gain of 50 → amplified voltage fed into <code class="inline-code">ADC_CHANNEL_1</code>.</p>
+              <div class="formula">I = V<sub>adc</sub> / (Gain × R<sub>shunt</sub>) = V<sub>adc</sub> / (50 × 0.15)</div>
+              <p><strong>Implementation:</strong> The MCP6002 is configured in non-inverting amplifier topology with feedback resistor network setting gain to exactly 50×. Decoupling capacitors near power pins minimize noise.</p>
+            </div>
+
+            <div class="feature-box glass-card">
+              <h4 class="neon-accent">Solid-State Load Switching (IRLZ44N MOSFET)</h4>
+              <p><strong>Why:</strong> Traditional mechanical relays are slow (10-100 ms) and wear out over time due to contact arcing. A solid-state MOSFET provides microsecond-level switching with no mechanical wear.</p>
+              <p><strong>Component:</strong> <strong>IRLZ44N</strong> — Logic-level N-Channel MOSFET. The key advantage is its low gate voltage threshold (1.5V typical), allowing direct 3.3V MCU GPIO drive without additional level shifting.</p>
+              <p><strong>Fail-Safe Design:</strong> The MOSFET gate includes a physical 10kΩ pull-down resistor connected directly to Ground. This ensures that if the MCU resets or loses power, the gate potential naturally bleeds to 0V, turning the MOSFET off and disconnecting the load. No software can override this hardware safety feature.</p>
+              <p><strong>Operation:</strong> The STM32 GPIO PA8 (push-pull output) actively drives the gate HIGH (3.3V) to turn the motor ON and LOW (0V) to turn it OFF. Protection logic evaluates current every 200ms. If overcurrent (>0.6A) is detected, the firmware de-asserts PA8, and the MOSFET switches off in microseconds.</p>
+              <p><strong>Advantage Over Mechanical:</strong> No arcing → no contact wear → system can auto-recover from transient faults or lock out based entirely on firmware logic.</p>
             </div>
           </div>
 
@@ -144,33 +165,65 @@
         <h2 class="section-title">Firmware <span class="neon-text">Implementation</span></h2>
         <div class="firmware-grid">
           <div class="fw-card glass-card reveal-left">
-            <h3>DMA-Driven ADC</h3>
-            <p>ADC continuously samples channels, DMA transfers data to buffer automatically.</p>
-            <pre><code class="language-c">HAL_ADC_Start_DMA(&hadc1, 
-  (uint32_t*)adc_buffer, 2);</code></pre>
+            <h3>DMA-Driven ADC Acquisition</h3>
+            <p><strong>Why:</strong> Regular ADC polling blocks the CPU, wasting processing cycles waiting for conversions. Direct Memory Access (DMA) solves this by letting the ADC and a dedicated DMA controller handle data transfers autonomously.</p>
+            <p><strong>How:</strong> The ADC is configured in continuous scan mode sampling two channels (Voltage on CH0, Current on CH1). Every conversion completes, the DMA controller automatically writes the result to a 2-element buffer in RAM. The CPU reads this buffer whenever needed — no blocking, no waiting.</p>
+            <p><strong>Benefit:</strong> Real-time responsiveness. While the ADC continuously acquires data, the firmware is free to process math, update the display, and evaluate safety conditions without interruption.</p>
+            <pre><code class="language-c">// Initialize ADC with DMA
+HAL_ADC_Start_DMA(&hadc1, 
+  (uint32_t*)adc_buffer, 2);
+
+// Main loop reads pre-filled buffer
+uint32_t v_adc = adc_buffer[0];
+uint32_t i_adc = adc_buffer[1];</code></pre>
           </div>
 
           <div class="fw-card glass-card reveal-right">
-            <h3>Data Integration</h3>
-            <p>Accumulate energy and charge using timestamped deltas.</p>
-            <pre><code class="language-c">E_wh += P × (Δt / 3600)
-Q_ah += I × (Δt / 3600)</code></pre>
+            <h3>Real-Time Data Processing</h3>
+            <p><strong>Integration Strategy:</strong> Instantaneous power is calculated from voltage and current. Energy and charge are accumulated over time using timestamped deltas to integrate power and current.</p>
+            <p><strong>Formulas:</strong></p>
+            <pre><code class="language-c">// Instantaneous values
+P_watts = V_battery * I_battery
+
+// Accumulate energy (Watt-hours)
+E_wh += P_watts * (delta_t / 3600)
+
+// Accumulate charge (Amp-hours)  
+Q_ah += I_battery * (delta_t / 3600)
+
+// State of Charge
+SoC_percent = (Q_ah / Q_capacity) * 100</code></pre>
+            <p><strong>Time Delta:</strong> Each loop iteration, the firmware calculates elapsed seconds since the last update. This delta (typically 200ms) allows accurate integration regardless of processing speed variations.</p>
           </div>
 
           <div class="fw-card glass-card reveal-left">
-            <h3>Protection Logic</h3>
-            <p>Evaluate thresholds multiple times per second, disconnect immediately on fault.</p>
-            <pre><code class="language-c">if (I > 0.6A) {
-  MOSFET_GATE = OFF;
+            <h3>Active Protection Logic</h3>
+            <p><strong>Architecture:</strong> Protection runs 5 times per second (200ms intervals). If current exceeds 0.6A threshold, the firmware immediately de-asserts GPIO PA8, turning off the MOSFET and disconnecting the load in microseconds.</p>
+            <p><strong>Why Discrete Logic Over IC:</strong> Standard automotive BMS ICs (like Texas Instruments or NXP variants) handle protection internally and report only final status. Building protection in firmware gives complete transparency: you see exactly which condition triggered, can log it, and implement custom recovery strategies.</p>
+            <pre><code class="language-c">// Protection evaluation (runs every 200ms)
+if (I_battery > OVERCURRENT_THRESHOLD) {
+  HAL_GPIO_WritePin(MOSFET_PORT, 
+    MOSFET_PIN, GPIO_PIN_RESET);
+  fault_flag = 1;
+  log_fault_event();
 }</code></pre>
+            <p><strong>Custom Recovery:</strong> The system can be programmed to auto-retry after a brief timeout, or lock out permanently based on fault count.</p>
           </div>
 
           <div class="fw-card glass-card reveal-right">
-            <h3>Fail-Safe Design</h3>
-            <p>Physical pull-down resistor guarantees safe power-off state on MCU reset.</p>
-            <pre><code class="language-c">// Default OFF state
-// Watchdog ensures recovery
-// No arcing, no wear</code></pre>
+            <h3>Fail-Safe Architecture</h3>
+            <p><strong>Design Philosophy:</strong> Power must be actively maintained. If anything fails (software crash, watchdog reset, loss of power), the system defaults to a safe OFF state.</p>
+            <p><strong>Mechanisms:</strong></p>
+            <ul style="color: var(--text-secondary); margin: 0.75rem 0; padding-left: 1.5rem;">
+              <li><strong>Physical Pull-Down:</strong> 10kΩ resistor on MOSFET gate → Ground guarantees gate discharges to 0V even if MCU is unpowered.</li>
+              <li><strong>Watchdog Timer:</strong> Hardware watchdog monitors firmware health. If watchdog isn't fed (software hangs), it triggers a reset. Gate pull-down ensures MOSFET stays off during reset.</li>
+              <li><strong>No Arcing:</strong> Solid-state switching means no mechanical contacts → no arcing → no wear → system remains reliable indefinitely.</li>
+            </ul>
+            <pre><code class="language-c">// Watchdog prevents stuck firmware
+HAL_IWDG_Refresh(&hiwdg);
+
+// MOSFET gate physically pulled low
+// Software cannot override this safety</code></pre>
           </div>
         </div>
       </div>
@@ -212,32 +265,32 @@ Q_ah += I × (Δt / 3600)</code></pre>
           <div class="spec-card glass-card reveal-up">
             <div class="spec-icon">⚙️</div>
             <h4>Microcontroller</h4>
-            <p>STM32F103<br>ARM Cortex-M3<br>72 MHz</p>
+            <p><strong>STM32F103</strong><br>ARM Cortex-M3 Core<br>72 MHz Clock<br>Rich Peripherals (ADC, DMA, I2C, GPIO)</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.1s">
             <div class="spec-icon">🔌</div>
-            <h4>ADC</h4>
-            <p>12-bit Resolution<br>2-channel Scan<br>DMA Driven</p>
+            <h4>ADC & Acquisition</h4>
+            <p><strong>12-bit Resolution</strong><br>4096 Discrete Levels<br>Dual-Channel Scan<br>DMA-Driven (No CPU Blocking)</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.2s">
             <div class="spec-icon">📊</div>
-            <h4>Sensing</h4>
-            <p>Shunt: 0.15Ω<br>Op-Amp Gain: 50×<br>Precision: ±2%</p>
+            <h4>Sensing Hardware</h4>
+            <p><strong>Shunt:</strong> 0.15Ω (±1% precision)<br><strong>Op-Amp:</strong> MCP6002 (50× gain)<br><strong>Voltage Divider:</strong> 1% metal-film resistors<br><strong>Accuracy:</strong> ±2%</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.3s">
             <div class="spec-icon">💾</div>
-            <h4>Display</h4>
-            <p>SSD1306 OLED<br>128×64 pixels<br>I2C Interface</p>
+            <h4>Display Interface</h4>
+            <p><strong>SSD1306 OLED</strong><br>128×64 Pixels<br>I2C Communication<br>Real-Time Dashboard</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.4s">
             <div class="spec-icon">⚡</div>
-            <h4>Protection</h4>
-            <p>IRLZ44N MOSFET<br>Logic-Level Gate<br>Fail-Safe Pull-Down</p>
+            <h4>Power Control</h4>
+            <p><strong>IRLZ44N MOSFET</strong><br>Logic-Level Gate (3.3V MCU Compatible)<br>Fail-Safe Pull-Down Resistor<br>Microsecond Switch Time</p>
           </div>
           <div class="spec-card glass-card reveal-up" style="animation-delay: 0.5s">
             <div class="spec-icon">🎯</div>
-            <h4>Performance</h4>
-            <p>Update Rate: 5 Hz<br>Response: Microseconds<br>Accuracy: High-Precision</p>
+            <h4>System Performance</h4>
+            <p><strong>Update Rate:</strong> 5 Hz (200ms)<br><strong>Protection Response:</strong> Microseconds<br><strong>Overcurrent Threshold:</strong> >0.6A<br><strong>Measurement Precision:</strong> High-Grade</p>
           </div>
         </div>
       </div>
