@@ -356,14 +356,15 @@ body {
 }
 
 .card-icon {
-  font-size: 32px;
-  margin-bottom: 1rem;
+  display: none;
 }
 
 .bento-card h3 {
-  font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
 .bento-card p {
@@ -447,7 +448,12 @@ body {
 }
 
 .feature-box h4 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
 }
 
 .neon-accent {
@@ -500,9 +506,11 @@ body {
 }
 
 .fw-card h3 {
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
+  font-size: 19px;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
 .fw-card p {
@@ -594,14 +602,15 @@ body {
 }
 
 .spec-icon {
-  font-size: 40px;
-  margin-bottom: 1rem;
+  display: none;
 }
 
 .spec-card h4 {
-  font-size: 16px;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
 .spec-card p {
